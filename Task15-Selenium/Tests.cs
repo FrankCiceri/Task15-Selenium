@@ -38,21 +38,54 @@ namespace Task15_Selenium
 
 
         [Test]
-        public void CreateAcc_CheckButtonText_CreateAnAccount()        {
+        public void Scenario1() 
+        {
+            var customerLoginPage = _mainPage.ClickLoginButton();
+            customerLoginPage.Login("abc@email.com", "Abc123456");
 
-           string text = _mainPage.GetCreateAccButtonText();          
-           Assert.AreEqual(text,"Create an Account");
+            var watchesPage =  _mainPage.GoToWatchesPageButton();
+
+            string expectedItem = "Dash Digital Watch";
+            watchesPage.LookForItem(expectedItem);
+
+            var checkoutPage = watchesPage.ProceedToCheckOut();
+            checkoutPage.FillInformationAndContinue();
+
+            var expectedPrices = checkoutPage.GetPrices();
+
+            var successPage = checkoutPage.PlaceOrder();          
+
+            string orderNumber = successPage.GetOrderNumber();
+            successPage.ContinueShopping();
+
+
+
+            var customerPage = _mainPage.GoToAccount();
+
+            customerPage.GoToOrders();
+
+            customerPage.ClickOrderNumber(orderNumber);
+
+            var actualItem = customerPage.GetProductName();
+            var actualPrices = customerPage.GetPrices();
+
+            Assert.Multiple(() =>
+            {
+                CollectionAssert.AreEqual(expectedPrices, actualPrices);
+                Assert.AreEqual(expectedItem, actualItem);
+
+            });       
+
         }
 
-       
 
 
 
         [Test]
-        public void Scenario2(){ 
+        public void Scenario2()
+        { 
            var customerCreateAccPage = _mainPage.ClickCreateAccButton();
             customerCreateAccPage.CreateAccount("f", "c", "Abc123456");
-            Console.WriteLine(customerCreateAccPage.GetEmailError());
             Assert.AreEqual(customerCreateAccPage.GetEmailError(), "This is a required field.");
         
         }
@@ -66,19 +99,12 @@ namespace Task15_Selenium
             
             var bagsPage = _mainPage.OpenBagsPage();
 
-
-
-
             bagsPage.AddTwoFirstItemsToCart();
 
             var productPage = bagsPage.HoverGoToThirdElement();
-            productPage.AddProduct();
+            productPage.AddProduct();            
 
-            
-
-            var numCartProducts = productPage.GetCartNumProducts();
-
-            
+            var numCartProducts = productPage.GetCartNumProducts();            
 
             Assert.AreEqual("3", numCartProducts);
 

@@ -25,6 +25,8 @@ namespace Task15_Selenium.Pages
 
         public CustomerRegisterPage(IWebDriver driver) : base(driver) 
        { 
+
+
        }
 
         public void CreateAccount(string firstName, string lastName, string password)

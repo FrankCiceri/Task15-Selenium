@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.PageObjects;
+using SeleniumExtras.WaitHelpers;
 
 namespace Task15_Selenium.Pages
 {
@@ -16,6 +17,13 @@ namespace Task15_Selenium.Pages
 
         [FindsBy(How = How.ClassName, Using = "logged-in")]
         private IWebElement _welcomeMessage;
+
+        [FindsBy(How = How.CssSelector, Using = ".action.switch")]
+        private IWebElement _customerMenu;
+
+        [FindsBy(How = How.XPath, Using = "//*[contains(text(),\"My Account\")]")]
+        private IWebElement _accountOption;
+
 
         public MainPage(IWebDriver driver) : base(driver) 
         {
@@ -54,5 +62,22 @@ namespace Task15_Selenium.Pages
 
             return _welcomeMessage.Text;
         }
+
+
+        public CustomerPage GoToAccount() 
+        {
+            WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(4));
+            _customerMenu.Click();
+
+            wait.Until(ExpectedConditions.ElementToBeClickable(_accountOption));
+
+            _accountOption.Click();
+
+            return new CustomerPage(_driver);
+        
+        }
+
+
+
     }
 }

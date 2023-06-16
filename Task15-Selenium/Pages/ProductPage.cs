@@ -14,8 +14,7 @@ namespace Task15_Selenium.Pages
         [FindsBy(How = How.Id, Using = "product-addtocart-button")]
         private IWebElement _addToCartButton;
 
-        [FindsBy(How = How.CssSelector, Using = ".counter-number")]        
-        private IWebElement _cartNumProducts;
+       
 
         public ProductPage(IWebDriver driver) : base(driver) 
         { 
@@ -28,12 +27,12 @@ namespace Task15_Selenium.Pages
 
             WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(4));
             
-            wait.Until((_) => _cartNumProducts.Text != string.Empty);
-            var currentText = _cartNumProducts.Text;
+            wait.Until((_) => GetCounter().Text != string.Empty);
+            var currentText = GetCounter().Text;
 
             _addToCartButton.Click();
 
-            wait.Until((_) => _cartNumProducts.Text != currentText);
+            wait.Until((_) => GetCounter().Text != currentText);
 
 
         }
@@ -41,7 +40,7 @@ namespace Task15_Selenium.Pages
         public string GetCartNumProducts()
         {
             
-            var texto = _cartNumProducts.Text;
+            var texto = GetCounter().Text;
             return texto;
 
         }
@@ -50,7 +49,7 @@ namespace Task15_Selenium.Pages
         public string EmptyCart()
         {
 
-            var texto = _cartNumProducts.Text;
+            var texto = GetCounter().Text;
             return texto;
 
         }
